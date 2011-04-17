@@ -1,0 +1,3 @@
+Simple example of working out distance from current location to nearest Maryland
+
+in index.php the $lat & $lon represent your current location
