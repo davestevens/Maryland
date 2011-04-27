@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #map_canvas { height: 100% }
+</style>
+
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+
+<script type="text/javascript">
+  navigator.geolocation.getCurrentPosition(getLocation, unknownLocation);
+
+  var map;
+  var myPos = {lat: '', lng: ''};
+  var all = [{name: 'Granby Street', addr: '76 Granby Street, Leicester, Leicestershire, LE1 1DJ', lat: '52.6329249', lng: '-1.1320287'},
+  {name: 'Evington Road', addr: '143 Evington Road, Leicester LE2 1QJ', lat: '52.6258618', lng: '-1.1097720'},
+  {name: 'Horsefair Street', addr: '41 Horsefair Street, Leicester, Leicestershire, LE1 5BP', lat: '52.6335224', lng: '-1.1338404'},
+  {name: 'Melton Road', addr: '96 Melton Road, Leicester, Leicestershire, LE4 5EB', lat: '52.6555466', lng: '-1.1181182'},
+  {name: 'Narborough Road', addr: '113 Narborough Rd, Leicester, Leicestershire LE3 0PA', lat: '52.6271698', lng: '-1.1504575'},
+  {name: 'East Park Road', addr: '162 East Park Rd, Leicester, Leicestershire LE5 4QB', lat: '52.6352902', lng: '-1.1031918'},
+  {name: 'Cheapside', addr: '10 Cheapside, Leicester, Leicestershire, LE1 5EA', lat: '52.6358385', lng: '-1.1336248'},
+  {name: 'Lower Parliament', addr: '24 Lower Parliament St, Nottingham, Nottinghamshire NG1 3DA', lat: '52.9552586', lng: '-1.1454855'},
+  {name: 'High Street', addr: '5 High Street , Loughborough LE11 2PY', lat: '52.7716206', lng: '-1.2053385'}
+  ];
+
+  function getLocation(pos) {
+    myPos.lat = pos.coords.latitude;
+    myPos.lng = pos.coords.longitude;
+    mapIt(pos.coords.latitude, pos.coords.longitude);
+  }
+
+  function unknownLocation() {
+    alert('could not get your location, no chicken for you');
+  }
+
+  function mapIt(lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    var myOptions = {
+      zoom: 13,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+    var me = new google.maps.Marker({position: new google.maps.LatLng(lat, lng), map: map, title: 'YOU'});
+
+    findNearest();
+  }
+
+  function showAll() {
+    var shop, i = -1;
+    while(shop = all[++i]) {
+      var mark = new google.maps.Marker({position: new google.maps.LatLng(shop.lat, shop.lng), map: map, title: shop.name});
+    }
+  }
+
+  function findNearest() {
+    var shop = all[0], i = 0;
+    var nearest = 0;
+    var close = distanceMeters(shop.lat, shop.lng);
+
+    while(shop = all[++i]) {
+      if(distanceMeters(shop.lat, shop.lng) < close) {
+        close = distanceMeters(shop.lat, shop.lng);
+        nearest = i;
+      }
+    }
+
+    alert('you are ' + close + ' meters away from a Maryland Chicken');
+    var mark = new google.maps.Marker({position: new google.maps.LatLng(all[nearest].lat, all[nearest].lng), map: map, title: all[nearest].name});
+  }
+
+  function distanceMeters(lat, lng) {
+    var dLat = lat - myPos.lat;
+    var dLng = lng - myPos.lng;
+    return Math.floor(Math.sqrt((dLat * dLat) + (dLng * dLng)) * 60 * 1852);
+  }
+</script>
+
+</head>
+<body>
+  <div id="map_canvas" style="width:100%; height:100%">GETTING YOUR POSITION MOTHER FUCKER</div>
+</body>
+</html>
