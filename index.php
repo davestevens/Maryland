@@ -16,12 +16,13 @@ foreach ($shops as $shop) {
   if($dis < $distance) {
     $closestShop = $details[0];
     $closestAddr = $details[1];
+    $distance = $dis;
   }
 }
 
 echo 'Closest Shop: ' . $closestShop . "\n";
 echo $closestAddr . "\n";
-echo $dis . " meters\n";
+echo $distance . " meters\n";
 
 function distanceInMeters($myLat, $myLon, $mlLat, $mlLon) {
   $dLat = $mlLat - $myLat;
